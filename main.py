@@ -54,7 +54,14 @@ def main():
     args.save_interval = 10
     args.use_linear_lr_decay = True
 
+    # Choose Case:
+    ## Cases
+    # 1: Outlet Boundary Control
+    # 2: Inlet  Boundary Control
+    # 3: Outlet & Inlet Boundary Control
+    control_settings['Scenario'] = 2
 
+    # Torch Initalization
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
 
@@ -129,12 +136,12 @@ def main():
                               actor_critic.recurrent_hidden_state_size)
 
     obs = envs.reset()
-    # ipdb.set_trace()
     rollouts.obs[0].copy_(obs)
     rollouts.to(device)
 
     episode_rewards = deque(maxlen=10)
-    # ipdb.set_trace()############################
+
+
     ### SAVE LOG.
 
     ##########
@@ -152,7 +159,7 @@ def main():
     now_pacific = now_utc.astimezone(timezone('US/Pacific'))
     text1=now_pacific.strftime(fmt)
 
-    save_dir = os.path.join(current_dir,"save_saehong/",text1+"/")
+    save_dir = os.path.join(current_dir,"save_results/",text1+"/")
 
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)

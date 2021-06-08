@@ -36,3 +36,10 @@ settings['dx'] = 10 #2.5
 
 control_settings={}
 
+## Cases
+# 1: Outlet Boundary Control
+# 2: Inlet  Boundary Control
+# 3: Outlet & Inlet Boundary Control
+
+choose_case = 1
+control_settings['Scenario'] = choose_case
