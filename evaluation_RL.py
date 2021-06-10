@@ -25,7 +25,11 @@ import ipdb
 # 1: Outlet Boundary Control
 # 2: Inlet  Boundary Control
 # 3: Outlet & Inlet Boundary Control
-control_settings['Scenario'] = 3
+# 4: Stochastic Outlet Boundary Control [Training Only]
+# 5: Stochastic Inlet Boundary Control [Training Only]
+# 6: Stochastic Outlet Boundary Control
+# 7: Stochastic Inlet Boundary Control
+control_settings['Scenario'] = 7
 print('-------------------------------------')
 print('-------------------------------------')
 print('Evaluating RL Performance of Case {}.'.format(control_settings['Scenario']))
@@ -86,6 +90,8 @@ c_x = lambda x: -1 / tau * np.exp(-x/tau/vs)
 ##########################################################################################
 # RL Controller Setting
 ##########################################################################################
+if control_settings['Scenario'] == 4 or control_settings['Scenario'] == 5:
+    raise ValueError('Please check the case. Case 4 and 5 are not training only.') 
 
 ## 1.Control Outlet, fix inlet
 if control_settings['Scenario'] == 1:
@@ -99,8 +105,15 @@ if control_settings['Scenario'] == 2:
 if control_settings['Scenario'] == 3:
     args = SimpleNamespace(env_name="arz-v0", load_dir="save_trained_results/3_Outlet_Inlet_Boundary_Results", seed = 1, det = True, non_det = False, log_interval=10)
 
-## 4.Control inlet & outlet w/ random r_s
-# args = SimpleNamespace(env_name="arz-v0", load_dir="./0917_inlet_outlet_controls_random/2020-09-17-12-06", seed = 1, det = True, non_det = False, log_interval=10)
+## 4.Control outlet w/ random r_s
+if control_settings['Scenario'] == 6:
+    args = SimpleNamespace(env_name="arz-v0", load_dir="save_trained_results/4_Stochastic_Outlet_Boundary_Results", seed = 1, det = True, non_det = False, log_interval=10)
+
+## 4.Control outlet w/ random r_s
+if control_settings['Scenario'] == 7:
+    args = SimpleNamespace(env_name="arz-v0", load_dir="save_trained_results/5_Stochastic_Inlet_Boundary_Results", seed = 1, det = True, non_det = False, log_interval=10)
+
+
 
 
 env_vec = make_vec_envs_arz(
@@ -134,10 +147,15 @@ if control_settings['Scenario'] == 3:
     actor_critic, ob_rms = \
                 torch.load(os.path.join(args.load_dir, args.env_name + "-tr-1040-th" + ".pt"),map_location='cpu')
 
-## 4.Control inlet & outlet w/ random r_s
-# actor_critic, ob_rms = \
-#             torch.load(os.path.join(args.load_dir, args.env_name + "-tr-2080-th" + ".pt"),map_location='cpu')
+## 4.Control outlet w/ random r_s
+if control_settings['Scenario'] == 6:
+    actor_critic, ob_rms = \
+                torch.load(os.path.join(args.load_dir, args.env_name + "-tr-1040-th" + ".pt"),map_location='cpu')
 
+## 5.Control inlet w/ random r_s
+if control_settings['Scenario'] == 7:
+    actor_critic, ob_rms = \
+                torch.load(os.path.join(args.load_dir, args.env_name + "-tr-1040-th" + ".pt"),map_location='cpu')
 
 vec_norm = get_vec_normalize(env_vec)
 if vec_norm is not None:
@@ -429,6 +447,125 @@ if control_settings['Scenario'] == 3:
 
 
 
+if control_settings['Scenario'] == 6:
+    print('Plotting Stochastic RL Outlet Case.')
+    ## create meshgrid
+    L = settings['L']  #[m]
+    dx = settings['dx']
+    x = np.arange(0,L+dx,dx)
+    t = np.arange(0,T,dt)
+
+    xx, tt = np.meshgrid(x,t,indexing='ij')
+
+    # Action
+    fig, ax1 = plt.subplots(figsize=(6,4))
+    U_outlet = r_save_RL[-1,1:] * v_save_RL[-1,1:]
+    plt.plot(U_outlet*3600)
+    plt.xlabel('Time [sec]')
+    plt.ylabel(r'$U_{out}(t)$ [veh/h]')
+    plt.title('Stochastic RL OUTLET INPUT SHAPE // Lighter Traffic')
+    plt.grid(True)
+    plt.show()
+
+    # Density
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlabel('Position x [m]')
+    ax.set_ylabel('Time [min]')
+    ax.set_zlabel('Density [veh/km]')
+    ax.set_title(r'$\rho$: Density')
+    ax.plot_surface(xx[0:,0:],tt[0:,0:],r_save_RL[0:,0:],cmap=plt.cm.gray,edgecolors='#000000',linewidth=0.01,antialiased=False,rstride=1,cstride=100)
+    ax.plot(xx[:,0],tt[:,0],r_save_RL[:,0],color='blue',LineWidth=4)
+    ax.plot(xx[-1,:],tt[-1,:],r_save_RL[-1,:],color='red',LineWidth=4)
+    
+    plt.show()
+
+    # Velocity
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlabel('Position x [m]')
+    ax.set_ylabel('Time [min]')
+    ax.set_zlabel('Velocity [m/s]')
+    ax.set_title(r'$V$: Velocity')
+    ax.plot_surface(xx[0:,0:],tt[0:,0:],v_save_RL[0:,0:],cmap=plt.cm.gray,edgecolors='#000000',linewidth=0.01,antialiased=False,rstride=1,cstride=100)
+    ax.plot(xx[:,0],tt[:,0],v_save_RL[:,0],color='blue',LineWidth=4)
+    ax.plot(xx[-1,:],tt[-1,:],v_save_RL[-1,:],color='red',LineWidth=4)
+    plt.show()
+
+    # Reward
+    fig, ax1 = plt.subplots(figsize=(8,4))
+
+    rwd_save_PPO = np.array(reward_save_RL)
+
+    plt.plot(TIME_VEC[:-1],reward_save_RL)
+    plt.xlabel('Time [sec]')
+    plt.ylabel('Reward')
+    plt.title('Reward')
+    plt.grid(True)
+    plt.show()
+
+
+if control_settings['Scenario'] == 7:
+    print('Plotting Stochastic RL Inlet Case.')
+    ## create meshgrid
+    L = settings['L']  #[m]
+    dx = settings['dx']
+    x = np.arange(0,L+dx,dx)
+    t = np.arange(0,T,dt)
+
+    xx, tt = np.meshgrid(x,t,indexing='ij')
+
+    # Action
+    fig, ax1 = plt.subplots(figsize=(6,4))
+    U_inlet = r_save_RL[0,1:] * v_save_RL[0,1:]
+    plt.plot(U_inlet*3600)
+    plt.xlabel('Time [sec]')
+    plt.ylabel(r'$U_{in}(t)$ [veh/h]')
+    plt.title('Stochastic RL INLET INPUT SHAPE // Denser Traffic')
+    plt.grid(True)
+    plt.show()
+
+    # Density
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlabel('Position x [m]')
+    ax.set_ylabel('Time [min]')
+    ax.set_zlabel('Density [veh/km]')
+    ax.set_title(r'$\rho$: Density')
+    ax.plot_surface(xx[0:,0:],tt[0:,0:],r_save_RL[0:,0:],cmap=plt.cm.gray,edgecolors='#000000',linewidth=0.01,antialiased=False,rstride=1,cstride=100)
+    ax.plot(xx[:,0],tt[:,0],r_save_RL[:,0],color='blue',LineWidth=4)
+    ax.plot(xx[0,:],tt[0,:],r_save_RL[0,:],color='red',LineWidth=4)
+    ax.invert_yaxis()
+    plt.show()
+
+    # Velocity
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlabel('Position x [m]')
+    ax.set_ylabel('Time [min]')
+    ax.set_zlabel('Velocity [m/s]')
+    ax.set_title(r'$V$: Velocity')
+    ax.plot_surface(xx[0:,0:],tt[0:,0:],v_save_RL[0:,0:],cmap=plt.cm.gray,edgecolors='#000000',linewidth=0.01,antialiased=False,rstride=1,cstride=100)
+    ax.plot(xx[:,0],tt[:,0],v_save_RL[:,0],color='blue',LineWidth=4)
+    ax.plot(xx[0,:],tt[0,:],v_save_RL[0,:],color='red',LineWidth=4)
+    ax.invert_yaxis()
+    plt.show()
+
+    # Reward
+    fig, ax1 = plt.subplots(figsize=(8,4))
+
+    rwd_save_PPO = np.array(reward_save_RL)
+
+    plt.plot(TIME_VEC[:-1],reward_save_RL)
+    plt.xlabel('Time [sec]')
+    plt.ylabel('Reward')
+    plt.title('Reward')
+    plt.grid(True)
+    plt.show()
+
+
+
+
 ##########################################################################################
 # SAVE
 ##########################################################################################
@@ -443,4 +580,10 @@ elif control_settings['Scenario'] == 2:
     print('Saved')
 elif control_settings['Scenario'] == 3:
     sio.savemat('save_mat/ARZ_RL_Outlet_N_Inlet_Results.mat',{'r_vec_RL':r_save_RL, 'v_vec_RL':v_save_RL, 'rwd_RL' : reward_save_RL, 'input_RL': action_save_RL, 'xx': xx, 'tt' : tt})
+    print('Saved')
+elif control_settings['Scenario'] == 6:
+    sio.savemat('save_mat/ARZ_RL_Stochastic_Outlet_Results.mat',{'r_vec_RL':r_save_RL, 'v_vec_RL':v_save_RL, 'rwd_RL' : reward_save_RL, 'input_RL': action_save_RL, 'xx': xx, 'tt' : tt})
+    print('Saved')
+elif control_settings['Scenario'] == 7:
+    sio.savemat('save_mat/ARZ_RL_Stochastic_Inlet_Results.mat',{'r_vec_RL':r_save_RL, 'v_vec_RL':v_save_RL, 'rwd_RL' : reward_save_RL, 'input_RL': action_save_RL, 'xx': xx, 'tt' : tt})
     print('Saved')

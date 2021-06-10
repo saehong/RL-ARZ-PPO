@@ -59,7 +59,16 @@ def main():
     # 1: Outlet Boundary Control
     # 2: Inlet  Boundary Control
     # 3: Outlet & Inlet Boundary Control
-    control_settings['Scenario'] = 2
+    # 4: Stochastic Outlet Boundary Control (Training)
+    # 5: Stochastic Inlet Boundary Control (Training)
+    # 6: Stochastic Outlet Boundary Control (Validation)
+    # 7: Stochastic Inlet Boundary Control (Validation)
+
+    control_settings['Scenario'] = 1 # <-- Change this.
+
+
+    if control_settings['Scenario'] == 6 or control_settings['Scenario'] == 7:
+    	raise ValueError('Case is not correct. Case 6 and Case 7 are only for validation.')
 
     # Torch Initalization
     torch.manual_seed(args.seed)
@@ -179,8 +188,10 @@ def main():
     # ipdb.set_trace()
     #############################################
     start = time.time()
+    
     num_updates = int(args.num_env_steps) // args.num_steps // args.num_processes
     print('Num_updates:{}'.format(num_updates))
+    print
     for j in range(num_updates):
         if args.use_linear_lr_decay:
             # decrease learning rate linearly
@@ -282,5 +293,8 @@ def main():
             df['steps'] = save_steps
             df.to_csv(str(save_dir)+'summary.csv')
 
+
+    end = time.time()
+    print('Simulation Time: {} seconds.'.format(end-start))
 if __name__ == "__main__":
     main()

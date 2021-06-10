@@ -29,10 +29,12 @@ settings['ys'] = 0
 
 settings['gam'] = 1
 
-settings['T'] = 120
-settings['dt'] = 0.25 #0.1 
-settings['dx'] = 10 #2.5
+settings['T'] = 240 # 4 min
+settings['dt'] = 0.25 #0.25/50*60 (M=60) #0.25 (M=50) #0.25/50*40 (M=40)
+settings['dx'] = 10 #500/60 (M=60) #10 (M=50) #500/40 (M=40)
 
+print('Settins of dt:{}'.format(settings['dt'] ))
+print('Settins of dx:{}'.format(settings['dx'] ))
 
 control_settings={}
 
