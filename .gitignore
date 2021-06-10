@@ -1,8 +1,0 @@
-.gitignore
-
-# Jupyter Notebook
-RL_ARZ_Results_Analysis.ipynb
-
-
-# Response data
-TCST_Response/
