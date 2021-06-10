@@ -19,6 +19,14 @@ python main.py
 
 ```
 
+After training the agent, you can evaluate the performance of RL controller by executing:
+```bash
+# PyTorch
+python evaluation_RL.py
+
+```
+
+
 
 ## Results
 
