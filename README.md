@@ -11,9 +11,9 @@ This is the application of reinforcement learning (RL) for Aw-Rascle-Zhang (ARZ)
 
 ## How to run
 
-In the "settings_file.py", the parameters of ARZ simulator model are defined. For RL training configuration, the hyper-paramters are defined in "main.py".
+* In the "settings_file.py", the parameters of ARZ simulator model are defined. For RL training configuration, the hyper-paramters are defined in "main.py".
 
-You can simply run the code and reproduce the results by following:
+* You can simply run the code and reproduce the results by following:
 
 ```bash
 # Training
@@ -21,7 +21,7 @@ python main.py
 
 ```
 
-After training the RL agent, one can evaluate the performance of RL controller by executing:
+* After training the RL agent, one can evaluate the performance of RL controller by executing:
 ```bash
 # Evaluation & Visualization
 python evaluation_RL.py
