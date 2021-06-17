@@ -354,7 +354,7 @@ figure()
 colormap([0  0  0]);
 subplot(1,2,1);
 surf(r(:, 1:N/2),'FaceColor','white','EdgeColor','interp','MeshStyle','row');
-%axis([0, N/2, 0, M, 0.105, 0.135]);
+axis([0, N/2, 0, M, 0.105, 0.135]);
 ylabel('Position x (km)','fontsize', 26)
 xlabel('time (min)','fontsize', 26)
 zlabel('Density (vehicle/km)','fontsize', 26)
@@ -382,7 +382,7 @@ ax=gca;
 colormap([0  0  0]); 
 subplot(1,2,2);
 surf(v(:, 1:N/2),'FaceColor','white','edgecolor', 'interp','MeshStyle','row');
-%axis([0, N/2, 0, M, 32,40]);
+axis([0, N/2, 0, M, 32,40]);
 ylabel('Position x (km)','fontsize', 26)
 xlabel('time (min)','fontsize', 26)
 zlabel('velocity (km/h)','fontsize', 26)
