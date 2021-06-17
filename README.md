@@ -30,24 +30,28 @@ python evaluation_RL.py
 
 * Model-based baselines, i.e., Openloop, Backstepping, P, and PI controllers, are executed by following:
 ```bash
+# Openloop control
 # Evaluation & Visualization
 python evaluation_Openloop.py
 
 ```
 
 ```bash
+# Backstepping control
 # Evaluation & Visualization
 python evaluation_Backstep.py
 
 ```
 
 ```bash
+# P control
 # Evaluation & Visualization
 python evaluation_P_control_inlet.py
 
 ```
 
 ```bash
+## PI control
 # Evaluation & Visualization
 python evaluation_PI_control_Inlet_N_Outlet.py
 
