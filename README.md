@@ -44,19 +44,19 @@ python evaluation_RL.py
 
 ### P Inlet Control
 
-![P_Inlet](imgs/P_Inlet.png)
+![P_Inlet](imgs/ARZ_P_Inlet.png)
 
 ### RL Inlet Control
 
-![RL_Inlet](imgs/RL_Inlet.png)
+![RL_Inlet](imgs/ARZ_RL_Inlet.png)
 
 ### PI Outlet & Inlet Control
 
-![PI_OutletInlet](imgs/PI_Outlet_N_Inlet.png)
+![PI_OutletInlet](imgs/ARZ_PI_Outlet_N_Inlet.png)
 
 ### RL Outlet & Inlet Control
 
-![RL_OutletInlet](imgs/RL_Outlet_N_Inlet.png)
+![RL_OutletInlet](imgs/ARZ_RL_Outlet_N_Inlet.png)
 
 
 ## Bibtex
