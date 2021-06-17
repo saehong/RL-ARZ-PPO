@@ -34,17 +34,29 @@ python evaluation_RL.py
 
 
 
-### P Control
-![Inlet&Outlet](imgs/RL_p_control.png)
+### BackStepping Outlet Control
+![BKST_Outlet](imgs/ARZ_BKST_Outlet.png)
 
 
-### PI Control
+### RL Outlet Control
 
-![Inlet](imgs/RL_PI.png)
+![RL_Outlet](imgs/ARZ_RL_Outlet.png)
 
-### Outlet Control
+### P Inlet Control
 
-![Outlet](imgs/RL_outlet_115.png)
+![P_Inlet](imgs/P_Inlet.png)
+
+### RL Inlet Control
+
+![RL_Inlet](imgs/RL_Inlet.png)
+
+### PI Outlet & Inlet Control
+
+![PI_OutletInlet](imgs/PI_Outlet_N_Inlet.png)
+
+### RL Outlet & Inlet Control
+
+![RL_OutletInlet](imgs/RL_Outlet_N_Inlet.png)
 
 
 ## Bibtex
